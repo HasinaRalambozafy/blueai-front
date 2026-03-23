@@ -67,14 +67,20 @@
 .log-list li { font-size:11px; padding:5px 0; border-bottom:1px solid #1e293b; color:#94a3b8; }
 .time { color:#3b82f6; font-weight:bold; }
 
-/* --- SVG pipe network styles --- */
-.pipe-network .main-flow { stroke:#0ea5e9; stroke-width:4; }
-.pipe-network .secondary-pipe { stroke:#94a3b8; stroke-width:3; }
-.pipe-network .alert-glow { stroke:#3b82f6; stroke-width:6; filter:drop-shadow(0 0 8px rgba(59,130,246,0.6)); animation:draw-pipe 3s forwards ease-in-out; }
-@keyframes draw-pipe { to { stroke-dashoffset:0; } }
 
-.sensor-node { fill:#0f172a; }
-.active-alert { fill:#ef4444; }
-.map-label { font-size:10px; font-weight:600; fill:#94a3b8; pointer-events:none; text-transform:uppercase; }
-.highlight-label { fill:#475569; font-weight:800; }
 
+
+
+.resolve-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resolve-button:hover {
+  background-color: #45a049;
+}

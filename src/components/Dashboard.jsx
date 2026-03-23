@@ -18,11 +18,7 @@ function Dashboard() {
     }
   };
 
-
-
-  
-
-  const [pumpON, setPumpOn] = useState(true);
+  const [pumpON, setPumpOn] = useState(null);
   const fetchPompe = async () => {
     try {
       const res = await fetch(`${API_BASE}/api/measurements`);
@@ -33,6 +29,25 @@ function Dashboard() {
       console.error("Erreur fetch alerts:", err);
     }
   };
+
+  const resolveAlert = async (alertId) => {
+  try {
+    const res = await fetch(`${API_BASE}/api/alerts/${alertId}/resolve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+      setAlerts(prev => prev.filter(a => a.id !== alertId));
+    } else {
+      console.error("Erreur resolveAlert:", data.error);
+    }
+  } catch (err) {
+    console.error("Erreur fetch resolveAlert:", err);
+  }
+};
 
   useEffect(() => {
     fetchAlerts();
@@ -53,13 +68,13 @@ function Dashboard() {
       <div className="top-widgets">
         <div className="card kpi-dark">
           <span className="card-label">Pompe</span>
-          <div className="card-value">{pumpON ? "ON" : "OFF"}</div>
+          <div className="card-value">{pumpON === null ? "..." : pumpON ? "ON" : "OFF"}</div>
           <p className="card-desc">Pompe en fonctionnement</p>
         </div>
 
         <div className="card kpi-blue">
           <span className="card-label">Capteur</span>
-          <div className="card-value">{latestAlert.sensor_id || "Aucun"}</div>
+          <div className="card-value">{latestAlert.sensor_id || "..."}</div>
           <p className="card-desc">Nom du capteur</p>
         </div>
 
@@ -94,6 +109,11 @@ function Dashboard() {
           <div className="side-card">
             <h4>Message d'alerte</h4>
             <p>{latestAlert.message || "Aucune alerte"}</p>
+            {latestAlert.id && (
+              <button className="resolve-button " onClick={() => resolveAlert(latestAlert.id)}>
+                Résoudre
+              </button>
+            )}
           </div>
           <div className="side-card">
             <h4>Historique des alertes</h4>

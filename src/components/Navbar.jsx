@@ -10,7 +10,7 @@ function Navbar() {
       </div>
 
       <div className="navbar-center">
-        <h1 className="dashboard-title">Dashboard du Réseau</h1>
+        <h1 className="dashboard-title">Tableau de bord du Réseau</h1>
       </div>
 
       <div className="navbar-right">

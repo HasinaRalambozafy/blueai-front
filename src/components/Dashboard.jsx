@@ -3,7 +3,7 @@ import './Dashboard.css';
 import Plan from "./Plan.jsx";
 
 
-const API_BASE = "http://127.0.0.1:5000";
+const API_BASE = "http://172.20.10.2:5000";
 
 function Dashboard() {
   const [alerts, setAlerts] = useState([]);
@@ -18,14 +18,33 @@ function Dashboard() {
     }
   };
 
+
+
+  
+
+  const [pumpON, setPumpOn] = useState(true);
+  const fetchPompe = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/measurements`);
+      const data = await res.json();
+      console.log ("DATA API :", data);
+      setPumpOn(data.pump_on);
+    } catch (err) {
+      console.error("Erreur fetch alerts:", err);
+    }
+  };
+
   useEffect(() => {
     fetchAlerts();
-    const interval = setInterval(fetchAlerts, 5000);
+    fetchPompe();
+    const interval = setInterval(() => {
+    fetchAlerts();
+    fetchPompe();
+  }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   const latestAlert = alerts[0] || {};
-  const pompeOn = alerts.some(alert => alert.value_at_alert >= 1.4);
   
   return (
     <div className="dashboard-layout">
@@ -34,7 +53,7 @@ function Dashboard() {
       <div className="top-widgets">
         <div className="card kpi-dark">
           <span className="card-label">Pompe</span>
-          <div className="card-value">{pompeOn ? "ON" : "OFF"}</div>
+          <div className="card-value">{pumpON ? "ON" : "OFF"}</div>
           <p className="card-desc">Pompe en fonctionnement</p>
         </div>
 
@@ -46,30 +65,31 @@ function Dashboard() {
 
         <div className="card kpi-white">
           <span className="card-label">Localisation</span>
-          <div className="card-value">{latestAlert.location || "N/A"}</div>
+          <div className="card-value">Réseau 1.0 </div>
           <p className="card-desc">Emplacement du capteur</p>
         </div>
 
         <div className={`card ${
-  latestAlert.severity?.toLowerCase() === "critical" 
-    ? "kpi-red" 
-    : "kpi-white"
-}`}>
+          latestAlert.type?.toLowerCase() === "critical" 
+            ? "kpi-red" 
+            : "kpi-white"
+        }`}>
           <span className="card-label">État Critique</span>
-          <div className="card-value" style={{color: latestAlert.severity === "critical" ? "#ef4444" : "#fbbf24"}}>
-            {latestAlert.severity ? latestAlert.severity.toUpperCase() : "Normal"}
+          <div className="card-value" style={{color: latestAlert.type === "critical" ? "#d1bebe" : "#fbbf24"}}>
+            {latestAlert.type ? latestAlert.type.toUpperCase() : "Normal"}
           </div>
+          <p className="card-desc">Normal-Critical-Warning</p>
         </div>
       </div>
 
-      {/* --- MIDDLE ROW: Carte réseau et Right Column --- */}
+      {/* --- Carte réseau et colonne droite--- */}
       <div className="middle-row">
         {/* Carte réseau */}
         <div className="map-view">
-          <Plan alerte={ latestAlert.severity?.toLowerCase() || "normal"}/>
+          <Plan alerte={ latestAlert.type?.toLowerCase() || "normal"}/>
         </div>
 
-        {/* Right column: D1 et D2 */}
+        {/* Colonne droite : D1 et D2 */}
         <div className="right-column">
           <div className="side-card">
             <h4>Message d'alerte</h4>

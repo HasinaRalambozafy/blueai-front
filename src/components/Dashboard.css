@@ -56,7 +56,14 @@
 
 .side-card h4 { font-size:13px; color:#60a5fa; margin-bottom:5px; text-transform:uppercase; }
 
-.log-list { list-style:none; padding:0; margin-top:10px; }
+.log-list { 
+  list-style:none;
+  padding:0; 
+  margin-top:10px; 
+  max-height: 150px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
 .log-list li { font-size:11px; padding:5px 0; border-bottom:1px solid #1e293b; color:#94a3b8; }
 .time { color:#3b82f6; font-weight:bold; }
 
@@ -71,6 +78,3 @@
 .map-label { font-size:10px; font-weight:600; fill:#94a3b8; pointer-events:none; text-transform:uppercase; }
 .highlight-label { fill:#475569; font-weight:800; }
 
-/* Goutte animée */
-.drop-icon { animation:drop-bounce 1s infinite alternate ease-in-out; }
-@keyframes drop-bounce { from { transform: translateY(0); } to { transform: translateY(-5px); } }
